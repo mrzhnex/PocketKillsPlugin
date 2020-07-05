@@ -13,6 +13,7 @@ namespace PocketKillsPlugin
             Events.PocketDimEscapedEvent += pocketKillsHandler.OnPocketDimensionExit;
             Events.SetClassEvent += pocketKillsHandler.OnSetEvent;
             Events.UsedMedicalItemEvent += pocketKillsHandler.OnMedicalItem;
+            Events.RemoteAdminCommandEvent += pocketKillsHandler.OnRemoteAdminCommand;
             Log.Info(getName + " on");
         }
 
@@ -21,6 +22,7 @@ namespace PocketKillsPlugin
             Events.PocketDimEscapedEvent -= pocketKillsHandler.OnPocketDimensionExit;
             Events.SetClassEvent -= pocketKillsHandler.OnSetEvent;
             Events.UsedMedicalItemEvent -= pocketKillsHandler.OnMedicalItem;
+            Events.RemoteAdminCommandEvent -= pocketKillsHandler.OnRemoteAdminCommand;
             Log.Info(getName + " off");
         }
 
