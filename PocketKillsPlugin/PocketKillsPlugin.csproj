@@ -71,8 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PocketKillsComponent.cs" />
-    <Compile Include="PocketKillsHandler.cs" />
-    <Compile Include="PocketKillsPlugin.cs" />
+    <Compile Include="SetEvents.cs" />
+    <Compile Include="MainSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

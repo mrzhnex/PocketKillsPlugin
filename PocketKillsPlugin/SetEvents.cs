@@ -1,10 +1,9 @@
 ﻿using EXILED;
 using EXILED.Extensions;
-using System;
 
 namespace PocketKillsPlugin
 {
-    internal class PocketKillsHandler
+    public class SetEvents
     {
         public void OnPlayerDie(PlayerDeathEvent ev)
         {
@@ -30,7 +29,7 @@ namespace PocketKillsPlugin
             string[] args = ev.Command.Split(' ');
             if (args.Length == 0 || args[0].ToLower() != "rot")
                 return;
-
+            ev.Allow = false;
             if (args.Length != 3)
             {
                 ev.Sender.RAMessage("Out of args. " + GetUsage());
