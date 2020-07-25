@@ -10,7 +10,7 @@ namespace PocketKillsPlugin
             if (ev.Name.ToLower() != "rot")
                 return;
             ev.IsAllowed = false;
-            if (ev.Arguments.Count != 3)
+            if (ev.Arguments.Count != 2)
             {
                 ev.Sender.RemoteAdminMessage("Out of args. " + GetUsage());
                 return;
@@ -23,7 +23,7 @@ namespace PocketKillsPlugin
                 return;
             }
 
-            if (ev.Arguments[2].ToLower() == "add")
+            if (ev.Arguments[1].ToLower() == "add")
             {
                 if (player.GameObject.GetComponent<PocketKillsComponent>())
                 {
@@ -40,7 +40,7 @@ namespace PocketKillsPlugin
                     return;
                 }
             }
-            else if (ev.Arguments[2].ToLower() == "remove")
+            else if (ev.Arguments[1].ToLower() == "remove")
             {
                 if (player.GameObject.GetComponent<PocketKillsComponent>())
                 {
