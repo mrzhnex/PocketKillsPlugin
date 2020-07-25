@@ -1,106 +1,97 @@
-﻿using EXILED;
-using EXILED.Extensions;
+﻿using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 
 namespace PocketKillsPlugin
 {
     public class SetEvents
     {
-        public void OnPlayerDie(PlayerDeathEvent ev)
+        internal void OnSendingRemoteAdminCommand(SendingRemoteAdminCommandEventArgs ev)
         {
-            if (ev.Player.gameObject.GetComponent<PocketKillsComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<PocketKillsComponent>());
-            }
-        }
-
-        public void OnPocketDimensionExit(PocketDimEscapedEvent ev)
-        {
-            if (ev.Player.gameObject.GetComponent<PocketKillsComponent>() == null)
-            {
-                PocketKillsComponent pocketKillsComponent = ev.Player.gameObject.AddComponent<PocketKillsComponent>();
-                pocketKillsComponent.player = ev.Player;
-                pocketKillsComponent.damage = 1;
-                pocketKillsComponent.eventTime = 5;
-            }
-        }
-
-        internal void OnRemoteAdminCommand(ref RACommandEvent ev)
-        {
-            string[] args = ev.Command.Split(' ');
-            if (args.Length == 0 || args[0].ToLower() != "rot")
+            if (ev.Name.ToLower() != "rot")
                 return;
-            ev.Allow = false;
-            if (args.Length != 3)
+            ev.IsAllowed = false;
+            if (ev.Arguments.Count != 3)
             {
-                ev.Sender.RAMessage("Out of args. " + GetUsage());
+                ev.Sender.RemoteAdminMessage("Out of args. " + GetUsage());
                 return;
             }
 
-            ReferenceHub referenceHub = Player.GetPlayer(args[1]);
-            if (referenceHub == null)
+            Player player = Player.Get(ev.Arguments[0]);
+            if (player == null)
             {
-                ev.Sender.RAMessage("Player not found");
+                ev.Sender.RemoteAdminMessage("Player not found");
                 return;
             }
 
-            if (args[2].ToLower() == "add")
+            if (ev.Arguments[2].ToLower() == "add")
             {
-                if (referenceHub.gameObject.GetComponent<PocketKillsComponent>())
+                if (player.GameObject.GetComponent<PocketKillsComponent>())
                 {
-                    ev.Sender.RAMessage("Player " + referenceHub.nicknameSync.Network_myNickSync + " is already have rot component");
+                    ev.Sender.RemoteAdminMessage("Player " + player.Nickname + " is already have rot component");
                     return;
                 }
                 else
                 {
-                    PocketKillsComponent pocketKillsComponent = referenceHub.gameObject.AddComponent<PocketKillsComponent>();
-                    pocketKillsComponent.player = referenceHub;
-                    pocketKillsComponent.damage = 1;
-                    pocketKillsComponent.eventTime = 5;
-                    ev.Sender.RAMessage("Add rot component to " + referenceHub.nicknameSync.Network_myNickSync);
+                    PocketKillsComponent pocketKillsComponent = player.GameObject.AddComponent<PocketKillsComponent>();
+                    pocketKillsComponent.player = player;
+                    pocketKillsComponent.Damage = 1;
+                    pocketKillsComponent.EventTime = 5;
+                    ev.Sender.RemoteAdminMessage("Add rot component to " + player.Nickname);
                     return;
                 }
             }
-            else if (args[2].ToLower() == "remove")
+            else if (ev.Arguments[2].ToLower() == "remove")
             {
-                if (referenceHub.gameObject.GetComponent<PocketKillsComponent>())
+                if (player.GameObject.GetComponent<PocketKillsComponent>())
                 {
-                    UnityEngine.Object.Destroy(referenceHub.gameObject.GetComponent<PocketKillsComponent>());
-                    ev.Sender.RAMessage("Remove rot component from " + referenceHub.nicknameSync.Network_myNickSync);
+                    UnityEngine.Object.Destroy(player.GameObject.GetComponent<PocketKillsComponent>());
+                    ev.Sender.RemoteAdminMessage("Remove rot component from " + player.Nickname);
                     return;
                 }
                 else
                 {
-                    ev.Sender.RAMessage("Player " + referenceHub.nicknameSync.Network_myNickSync + " do not have rot component");
+                    ev.Sender.RemoteAdminMessage("Player " + player.Nickname + " do not have rot component");
                     return;
                 }
             }
             else
             {
-                ev.Sender.RAMessage("Wrong args. " + GetUsage());
+                ev.Sender.RemoteAdminMessage("Wrong args. " + GetUsage());
                 return;
             }
 
         }
 
+        internal void OnChangingRole(ChangingRoleEventArgs ev)
+        {
+            if (ev.Player.GameObject.GetComponent<PocketKillsComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<PocketKillsComponent>());
+            }
+        }
+
+        internal void OnMedicalItemUsed(UsedMedicalItemEventArgs ev)
+        {
+            if (ev.Item == ItemType.SCP500 && ev.Player.GameObject.GetComponent<PocketKillsComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<PocketKillsComponent>());
+            }
+        }
+
+        internal void OnEscapingPocketDimension(EscapingPocketDimensionEventArgs ev)
+        {
+            if (ev.Player.GameObject.GetComponent<PocketKillsComponent>() == null)
+            {
+                PocketKillsComponent pocketKillsComponent = ev.Player.GameObject.AddComponent<PocketKillsComponent>();
+                pocketKillsComponent.player = ev.Player;
+                pocketKillsComponent.Damage = 1;
+                pocketKillsComponent.EventTime = 5;
+            }
+        }
+
         private string GetUsage()
         {
             return "Usage: rot <id/nickname> add | rot <id/nickname> remove";
-        }
-
-        internal void OnMedicalItem(UsedMedicalItemEvent ev)
-        {
-            if (ev.ItemType == ItemType.SCP500 && ev.Player.gameObject.GetComponent<PocketKillsComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<PocketKillsComponent>());
-            }
-        }
-
-        internal void OnSetEvent(SetClassEvent ev)
-        {
-            if (ev.Player.gameObject.GetComponent<PocketKillsComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<PocketKillsComponent>());
-            }
         }
     }
 }

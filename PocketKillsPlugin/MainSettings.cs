@@ -1,31 +1,29 @@
-﻿using EXILED;
+﻿using Exiled.API.Features;
 
 namespace PocketKillsPlugin
 {
-     public class MainSettings : Plugin
+     public class MainSettings : Plugin<Config>
      {
         public SetEvents SetEvents { get; set; }
-        public override string getName => nameof(PocketKillsPlugin);
+        public override string Name => nameof(PocketKillsPlugin);
 
-        public override void OnEnable()
+        public override void OnEnabled()
         {
             SetEvents = new SetEvents();
-            Events.PocketDimEscapedEvent += SetEvents.OnPocketDimensionExit;
-            Events.SetClassEvent += SetEvents.OnSetEvent;
-            Events.UsedMedicalItemEvent += SetEvents.OnMedicalItem;
-            Events.RemoteAdminCommandEvent += SetEvents.OnRemoteAdminCommand;
-            Log.Info(getName + " on");
+            Exiled.Events.Handlers.Player.EscapingPocketDimension += SetEvents.OnEscapingPocketDimension;
+            Exiled.Events.Handlers.Player.MedicalItemUsed += SetEvents.OnMedicalItemUsed;
+            Exiled.Events.Handlers.Player.ChangingRole += SetEvents.OnChangingRole;
+            Exiled.Events.Handlers.Server.SendingRemoteAdminCommand += SetEvents.OnSendingRemoteAdminCommand;
+            Log.Info(Name + " on");
         }
 
-        public override void OnDisable()
+        public override void OnDisabled()
         {
-            Events.PocketDimEscapedEvent -= SetEvents.OnPocketDimensionExit;
-            Events.SetClassEvent -= SetEvents.OnSetEvent;
-            Events.UsedMedicalItemEvent -= SetEvents.OnMedicalItem;
-            Events.RemoteAdminCommandEvent -= SetEvents.OnRemoteAdminCommand;
-            Log.Info(getName + " off");
+            Exiled.Events.Handlers.Player.EscapingPocketDimension -= SetEvents.OnEscapingPocketDimension;
+            Exiled.Events.Handlers.Player.MedicalItemUsed -= SetEvents.OnMedicalItemUsed;
+            Exiled.Events.Handlers.Player.ChangingRole -= SetEvents.OnChangingRole;
+            Exiled.Events.Handlers.Server.SendingRemoteAdminCommand -= SetEvents.OnSendingRemoteAdminCommand;
+            Log.Info(Name + " off");
         }
-
-        public override void OnReload() { }
      }
 }

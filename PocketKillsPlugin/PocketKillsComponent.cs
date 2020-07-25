@@ -1,32 +1,26 @@
-﻿using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using UnityEngine;
 
 namespace PocketKillsPlugin
 {
-    // Token: 0x02000002 RID: 2
     public class PocketKillsComponent : MonoBehaviour
     {
         public void Update()
         {
-            if (this.timeLeft > this.eventTime)
+            if (TimeLeft > EventTime)
             {
-                this.player.playerStats.HurtPlayer(new PlayerStats.HitInfo(damage, player.GetNickname(), DamageTypes.Scp106, player.GetPlayerId()), gameObject);
-                this.timeLeft = 0f;
+                player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(Damage, player.Nickname, DamageTypes.Scp106, player.Id), gameObject);
+                TimeLeft = 0f;
             }
-            this.timeLeft += Time.deltaTime;
+            TimeLeft += Time.deltaTime;
         }
 
-        // Token: 0x04000001 RID: 1
-        public ReferenceHub player;
+        public Player player { get; set; }
         
+        public float EventTime { get; set; }
 
-        // Token: 0x04000003 RID: 3
-        public float eventTime;
+        public int Damage { get; set; }
 
-        // Token: 0x04000004 RID: 4
-        public int damage;
-
-        // Token: 0x04000005 RID: 5
-        private float timeLeft;
+        private float TimeLeft { get; set; }
     }
 }
